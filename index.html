@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#7c3aed">
+<title>Zone66 Control Panel</title>
+<style>
+:root{--bg:#07070b;--card:#11111a;--card2:#171722;--line:#272735;--text:#f7f7fb;--muted:#9b9baa;--p:#7c3aed;--p2:#a855f7;--ok:#22c55e;--bad:#ef4444}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at top,#21103b 0,#07070b 45%);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display",Arial,sans-serif;min-height:100vh}
+button,input,select,textarea{font:inherit}button{border:0;cursor:pointer}
+.wrap{max-width:1100px;margin:auto;padding:18px 14px 40px}.top{position:sticky;top:0;z-index:5;backdrop-filter:blur(18px);background:#07070bcc;border-bottom:1px solid #ffffff10;margin:-18px -14px 18px;padding:14px}
+.brand{display:flex;align-items:center;justify-content:space-between;gap:12px}.logo{width:46px;height:46px;border-radius:15px;background:linear-gradient(135deg,var(--p),var(--p2));display:grid;place-items:center;font-weight:900;font-size:20px;box-shadow:0 10px 35px #7c3aed55}.brand h1{font-size:20px;margin:0}.brand small{color:var(--muted)}
+.grid{display:grid;grid-template-columns:1fr;gap:14px}.card{background:linear-gradient(180deg,#151520,#0e0e15);border:1px solid var(--line);border-radius:20px;padding:16px;box-shadow:0 20px 60px #0005}.title{font-weight:800;font-size:17px;margin:0 0 12px}.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.field{margin-bottom:10px}.field label{display:block;color:var(--muted);font-size:12px;margin-bottom:6px}.input,.editor{width:100%;background:#0a0a10;border:1px solid #2d2d3d;color:var(--text);border-radius:12px;padding:12px;outline:none}.input:focus,.editor:focus{border-color:var(--p)}.btn{padding:11px 14px;border-radius:12px;background:#242432;color:#fff;border:1px solid #363647}.btn.primary{background:linear-gradient(135deg,var(--p),var(--p2));border:0}.btn.danger{background:#3a171d;color:#ffb4bc}.btn:disabled{opacity:.45;cursor:not-allowed}.actions{display:flex;gap:8px;flex-wrap:wrap}.status{font-size:13px;color:var(--muted);margin-top:10px;white-space:pre-wrap}.status.ok{color:#86efac}.status.bad{color:#fca5a5}.tree{max-height:430px;overflow:auto}.file{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:11px;border-bottom:1px solid #ffffff08}.file:last-child{border:0}.file button{background:none;color:#ddd;text-align:right;flex:1}.badge{font-size:11px;color:#c4b5fd;background:#2b174b;border:1px solid #5b2a96;padding:4px 7px;border-radius:999px}.editor{min-height:380px;resize:vertical;direction:ltr;text-align:left;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;line-height:1.55}.log{background:#050508;border:1px solid #252532;border-radius:12px;padding:12px;white-space:pre-wrap;direction:ltr;text-align:left;max-height:360px;overflow:auto;font:12px/1.5 ui-monospace,monospace}.hidden{display:none!important}.notice{padding:11px;border-radius:12px;background:#241b09;border:1px solid #5a4214;color:#f4d58c;font-size:12px}.tabs{display:flex;gap:7px;overflow:auto;margin-bottom:12px}.tab{white-space:nowrap}.tab.active{background:#39205f;border-color:#7442c4}.footer{text-align:center;color:#777;font-size:11px;margin-top:22px}
+@media(min-width:800px){.grid{grid-template-columns:340px 1fr}.full{grid-column:1/-1}.top{margin-bottom:22px}.editor{min-height:520px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="top">
+  <div class="brand">
+    <div style="display:flex;align-items:center;gap:11px">
+      <div class="logo">Z66</div>
+      <div><h1>Zone66 Control Panel</h1><small>GitHub project control</small></div>
+    </div>
+    <span id="connBadge" class="badge">غير متصل</span>
+  </div>
+</header>
+
+<section class="card" style="margin-bottom:14px">
+  <h2 class="title">🔐 اتصال GitHub</h2>
+  <div class="notice">أدخل Fine-grained token بصلاحية Contents: Read and write. وإذا تريد تشغيل GitHub Actions أضف Actions: Read and write. لا تحفظ التوكن في المتصفح.</div>
+  <div class="row" style="margin-top:12px">
+    <div class="field"><label>GitHub Token</label><input id="token" class="input" type="password" autocomplete="off" placeholder="github_pat_..."></div>
+    <div class="field"><label>Owner</label><input id="owner" class="input" value="husszzzz"></div>
+  </div>
+  <div class="row">
+    <div class="field"><label>Repository</label><input id="repo" class="input" value="Zone66-Player"></div>
+    <div class="field"><label>Branch</label><input id="branch" class="input" value="main"></div>
+  </div>
+  <div class="actions">
+    <button class="btn primary" onclick="connect()">اتصال وفحص المشروع</button>
+    <button class="btn" onclick="clearToken()">مسح التوكن</button>
+  </div>
+  <div id="connStatus" class="status"></div>
+</section>
+
+<div id="app" class="hidden">
+  <div class="grid">
+    <section class="card">
+      <div class="tabs">
+        <button class="btn tab active" id="tabFiles" onclick="showTab('files')">📁 الملفات</button>
+        <button class="btn tab" id="tabActions" onclick="showTab('actions')">⚙️ Actions</button>
+      </div>
+      <div id="filesTab">
+        <div class="actions" style="margin-bottom:10px">
+          <button class="btn" onclick="loadTree()">تحديث</button>
+          <button class="btn" onclick="newFile()">ملف جديد</button>
+        </div>
+        <div id="tree" class="tree"></div>
+      </div>
+      <div id="actionsTab" class="hidden">
+        <p class="status">تشغيل آخر Workflow يدويًا ومتابعة النتيجة.</p>
+        <div class="actions"><button class="btn primary" onclick="dispatchBuild()">▶️ تشغيل البناء</button><button class="btn" onclick="loadRuns()">تحديث الحالة</button></div>
+        <div id="runs" class="status"></div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2 class="title">✏️ محرر الملفات</h2>
+      <div class="field"><label>المسار</label><input id="path" class="input" placeholder=".github/workflows/build.yml"></div>
+      <textarea id="editor" class="editor" spellcheck="false" placeholder="اختر ملفاً من القائمة..."></textarea>
+      <div class="field" style="margin-top:10px"><label>رسالة الـCommit</label><input id="message" class="input" value="Update from Zone66 Control Panel"></div>
+      <div class="actions">
+        <button id="saveBtn" class="btn primary" onclick="saveFile()" disabled>💾 حفظ + Commit</button>
+        <button class="btn" onclick="reloadCurrent()">إعادة قراءة</button>
+      </div>
+      <div id="editStatus" class="status"></div>
+    </section>
+
+    <section class="card full">
+      <h2 class="title">🤖 فحص سريع لمشكلة IPA</h2>
+      <div class="actions">
+        <button class="btn primary" onclick="inspectKnown()">فحص build.yml + Info.plist</button>
+        <button class="btn" onclick="showPlan()">عرض خطة الإصلاح</button>
+      </div>
+      <div id="diagnostic" class="log" style="margin-top:10px">لم يتم الفحص بعد.</div>
+    </section>
+  </div>
+</div>
+<div class="footer">Zone66 Control Panel — token يبقى في ذاكرة الصفحة فقط ولا يتم تخزينه.</div>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+let state={token:"",owner:"husszzzz",repo:"Zone66-Player",branch:"main",sha:"",currentSha:"",tree:[]};
+
+function apiUrl(){return "/api/github"}
+async function api(action, extra={}){
+  const body={action, token:state.token, owner:state.owner, repo:state.repo, branch:state.branch, ...extra};
+  const r=await fetch(apiUrl(),{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});
+  const j=await r.json().catch(()=>({error:"Invalid server response"}));
+  if(!r.ok||j.error) throw new Error(j.error||"Request failed");
+  return j;
+}
+function setStatus(id,msg,ok=true){$(id).textContent=msg;$(id).className="status "+(ok?"ok":"bad")}
+function clearToken(){state.token="";$("token").value="";$("app").classList.add("hidden");$("connBadge").textContent="غير متصل"}
+async function connect(){
+  state.token=$("token").value.trim();state.owner=$("owner").value.trim();state.repo=$("repo").value.trim();state.branch=$("branch").value.trim();
+  if(!state.token)return setStatus("connStatus","أدخل GitHub Token",false);
+  try{const r=await api("connect");state.sha=r.sha;$("connBadge").textContent="متصل ✓";$("app").classList.remove("hidden");setStatus("connStatus","تم الاتصال بـ GitHub.\nBranch: "+state.branch,true);await loadTree();await inspectKnown()}catch(e){setStatus("connStatus",e.message,false)}
+}
+async function loadTree(){
+  try{const r=await api("tree");state.tree=r.files||[];renderTree()}catch(e){setStatus("connStatus",e.message,false)}
+}
+function renderTree(){
+  const el=$("tree");el.innerHTML="";
+  state.tree.filter(x=>x.type==="blob").sort((a,b)=>a.path.localeCompare(b.path)).forEach(f=>{
+    const d=document.createElement("div");d.className="file";
+    const b=document.createElement("button");b.textContent="📄 "+f.path;b.onclick=()=>openFile(f.path);d.appendChild(b);el.appendChild(d)
+  });
+}
+async function openFile(path){
+  try{const r=await api("read",{path});$("path").value=path;$("editor").value=r.content;$("saveBtn").disabled=false;state.currentSha=r.sha;setStatus("editStatus","تم تحميل "+path,true)}catch(e){setStatus("editStatus",e.message,false)}
+}
+async function reloadCurrent(){if($("path").value)await openFile($("path").value)}
+async function saveFile(){
+  const path=$("path").value.trim();const content=$("editor").value;const message=$("message").value.trim()||"Update from Zone66 Control Panel";
+  if(!path||!state.currentSha)return setStatus("editStatus","اختر ملفاً موجوداً أولاً.",false);
+  try{const r=await api("write",{path,content,message,sha:state.currentSha});state.currentSha=r.sha;setStatus("editStatus","تم الـCommit بنجاح ✓\n"+r.commit,true);await loadTree();}catch(e){setStatus("editStatus",e.message,false)}
+}
+function newFile(){const p=prompt("مسار الملف الجديد:");if(!p)return;$("path").value=p;$("editor").value="";state.currentSha="";$("saveBtn").disabled=true;setStatus("editStatus","النسخة الحالية تدعم تحديث الملفات الموجودة. للملف الجديد استخدم زر إنشاء عبر API بعد تجهيز المسار.",true)}
+async function dispatchBuild(){
+  try{const r=await api("dispatch",{workflow:".github/workflows/build.yml"});setStatus("runs","تم إرسال طلب تشغيل الـWorkflow ✓\n"+JSON.stringify(r,null,2),true);setTimeout(loadRuns,4000)}catch(e){setStatus("runs",e.message,false)}
+}
+async function loadRuns(){
+  try{const r=await api("runs");$("runs").textContent=(r.runs||[]).map(x=>`${x.status} — ${x.conclusion||"running"} — ${x.name}\n${x.html_url}`).join("\n\n")||"لا توجد runs"}catch(e){setStatus("runs",e.message,false)}
+}
+async function inspectKnown(){
+  try{
+    const a=await api("read",{path:".github/workflows/build.yml"});
+    const b=await api("read",{path:"Resources/Info.plist"});
+    const c=[];
+    c.push("BUILD.YML:\n"+(a.content.includes("Sources/App.swift")?"⚠️ يضم Sources/App.swift":"✓ لا يضم Sources/App.swift"));
+    c.push(a.content.includes("find Sources")?"✓ يستخدم اكتشاف ملفات Sources":"⚠️ لا يستخدم اكتشاف كامل للـSources");
+    c.push("\nINFO.PLIST:");
+    c.push(b.content.includes("<string>ZhTeam</string>")?"⚠️ CFBundleExecutable قديم: ZhTeam":"✓ CFBundleExecutable ليس ZhTeam");
+    c.push(b.content.includes("<string>Zone66</string>")?"✓ يحتوي Zone66":"⚠️ لا يحتوي Zone66");
+    $("diagnostic").textContent=c.join("\n");
+  }catch(e){$("diagnostic").textContent="فشل الفحص: "+e.message}
+}
+function showPlan(){$("diagnostic").textContent=`خطة الإصلاح المقترحة:
+1) إزالة نقطة الدخول المكررة @main.
+2) تجميع جميع ملفات Swift المطلوبة بدلاً من مجلدات ناقصة.
+3) توحيد CFBundleExecutable مع اسم الملف التنفيذي.
+4) توقيع التطبيق بعد اكتمال الحزمة.
+5) إنشاء IPA بصيغة Payload/Zone66.app.
+6) تشغيل GitHub Actions ثم فحص النتيجة.`}
+function showTab(t){$("filesTab").classList.toggle("hidden",t!=="files");$("actionsTab").classList.toggle("hidden",t!=="actions");$("tabFiles").classList.toggle("active",t==="files");$("tabActions").classList.toggle("active",t==="actions")}
+</script>
+</body>
+</html>
