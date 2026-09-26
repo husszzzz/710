@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport"
-      content="width=device-width, initial-scale=1, viewport-fit=cover">
+      content="width=device-width,initial-scale=1,viewport-fit=cover">
 
 <title>ZIP + Commit</title>
 
@@ -17,8 +17,8 @@
     --text:#fff;
     --muted:#aaa;
     --line:#292938;
-    --red:#ff3030;
     --green:#36d879;
+    --red:#ff3b30;
 }
 
 *{
@@ -29,10 +29,19 @@ body{
     margin:0;
     min-height:100vh;
     background:
-        radial-gradient(circle at 50% -10%,#5220a0 0,#191329 25%,#09090f 55%);
+        radial-gradient(
+            circle at 50% -10%,
+            #5220a0 0,
+            #191329 25%,
+            #09090f 60%
+        );
     color:var(--text);
-    font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display",
-                 "Segoe UI",sans-serif;
+    font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "SF Pro Display",
+        "Segoe UI",
+        sans-serif;
 }
 
 .container{
@@ -53,22 +62,25 @@ body{
 }
 
 .header p{
-    color:var(--muted);
     margin:8px 0 0;
+    color:var(--muted);
 }
 
 .card{
-    background:linear-gradient(
-        180deg,
-        rgba(25,25,38,.96),
-        rgba(14,14,22,.96)
-    );
+    background:
+        linear-gradient(
+            180deg,
+            rgba(25,25,38,.97),
+            rgba(14,14,22,.97)
+        );
 
     border:1px solid var(--line);
     border-radius:22px;
     padding:18px;
     margin-bottom:14px;
-    box-shadow:0 18px 50px #0007;
+
+    box-shadow:
+        0 18px 50px rgba(0,0,0,.45);
 }
 
 .title{
@@ -96,8 +108,7 @@ label{
     margin-bottom:7px;
 }
 
-input,
-select{
+input{
     width:100%;
     border:1px solid #303044;
     background:#090910;
@@ -108,8 +119,7 @@ select{
     outline:none;
 }
 
-input:focus,
-select:focus{
+input:focus{
     border-color:var(--purple2);
     box-shadow:0 0 0 3px #a855f718;
 }
@@ -132,24 +142,21 @@ button{
 
 .primary{
     color:#fff;
-    background:linear-gradient(
-        135deg,
-        var(--purple),
-        var(--purple2)
-    );
-    box-shadow:0 10px 30px #7c3aed35;
+    background:
+        linear-gradient(
+            135deg,
+            var(--purple),
+            var(--purple2)
+        );
+
+    box-shadow:
+        0 10px 30px #7c3aed35;
 }
 
 .secondary{
     color:#fff;
     background:#222231;
     border:1px solid #36364a;
-}
-
-.danger{
-    color:#ffb0b0;
-    background:#281216;
-    border:1px solid #5b2029;
 }
 
 .status{
@@ -186,11 +193,14 @@ button{
 .progress-bar{
     width:0%;
     height:100%;
-    background:linear-gradient(
-        90deg,
-        var(--purple),
-        var(--purple2)
-    );
+
+    background:
+        linear-gradient(
+            90deg,
+            var(--purple),
+            var(--purple2)
+        );
+
     transition:width .2s ease;
 }
 
@@ -202,6 +212,13 @@ button{
 
 code{
     color:#d29cff;
+}
+
+.file-name{
+    margin-top:10px;
+    color:#c39cff;
+    font-size:13px;
+    word-break:break-word;
 }
 
 .check{
@@ -216,13 +233,6 @@ code{
 .check input{
     width:auto;
 }
-
-.file-name{
-    margin-top:10px;
-    color:#b9a2ff;
-    font-size:13px;
-    word-break:break-word;
-}
 </style>
 </head>
 
@@ -231,11 +241,18 @@ code{
 <div class="container">
 
 <div class="header">
+
     <h1>🚀 ZIP + Commit</h1>
-    <p>رفع مشروع كامل إلى GitHub من الآيفون</p>
+
+    <p>
+        رفع مشروع كامل إلى GitHub من الآيفون
+    </p>
+
 </div>
 
+
 <!-- GitHub -->
+
 <div class="card">
 
     <div class="title">
@@ -245,46 +262,72 @@ code{
     <div class="grid">
 
         <div>
-            <label>GitHub Token</label>
+
+            <label>
+                GitHub Token
+            </label>
+
             <input
                 id="token"
                 type="password"
                 autocomplete="off"
-                placeholder="أدخل التوكن هنا">
+                placeholder="أدخل GitHub Token">
+
         </div>
 
+
         <div>
-            <label>Repository</label>
+
+            <label>
+                Repository
+            </label>
+
             <input
                 id="repo"
-                value="husszzzz/710"
+                value="husszzzz/Zone66-Player"
                 placeholder="OWNER/REPOSITORY">
+
         </div>
 
+
         <div>
-            <label>Branch</label>
+
+            <label>
+                Branch
+            </label>
+
             <input
                 id="branch"
                 value="main"
                 placeholder="main">
+
         </div>
 
+
         <div>
-            <label>Commit Message</label>
+
+            <label>
+                Commit Message
+            </label>
+
             <input
                 id="message"
                 value="Update project files"
-                placeholder="رسالة Commit">
+                placeholder="Commit message">
+
         </div>
 
     </div>
+
 
     <div class="buttons">
 
         <button
             class="primary"
             onclick="checkConnection()">
+
             🔎 فحص الاتصال
+
         </button>
 
     </div>
@@ -293,22 +336,28 @@ code{
 
 
 <!-- ZIP -->
+
 <div class="card">
 
     <div class="title">
-        2️⃣ ملف المشروع
+        2️⃣ ملف المشروع ZIP
     </div>
+
 
     <input
         id="zipFile"
         type="file"
         accept=".zip,application/zip">
 
+
     <div
         id="fileName"
         class="file-name">
+
         لم يتم اختيار ملف
+
     </div>
+
 
     <label class="check">
 
@@ -316,15 +365,15 @@ code{
             id="deleteMissing"
             type="checkbox">
 
-        حذف الملفات الموجودة في GitHub
-        وغير الموجودة داخل ZIP
+        حذف الملفات القديمة التي لا توجد داخل ZIP
 
     </label>
 
+
     <div class="info">
 
-        ⚠️ لا تفعل خيار الحذف إلا إذا كان الـZIP يحتوي
-        على المشروع الكامل.
+        ⚠️ لا تفعل الحذف إلا إذا كان ZIP يحتوي المشروع
+        الكامل.
 
     </div>
 
@@ -332,69 +381,101 @@ code{
 
 
 <!-- Upload -->
+
 <div class="card">
 
     <div class="title">
         3️⃣ تنفيذ
     </div>
 
+
     <div class="buttons">
 
         <button
             class="primary"
             onclick="uploadZip()">
+
             🚀 تطبيق ZIP + Commit
+
         </button>
+
 
         <button
             class="secondary"
             onclick="loadActions()">
+
             ⚙️ آخر Actions
+
         </button>
 
     </div>
 
+
     <div class="progress">
+
         <div
             id="progressBar"
             class="progress-bar">
         </div>
+
     </div>
+
 
     <div
         id="status"
         class="status">
+
         جاهز.
+
     </div>
 
 </div>
 
 
 <!-- Help -->
+
 <div class="card">
 
     <div class="title">
-        ℹ️ صلاحيات التوكن
+        ℹ️ طريقة العمل
     </div>
 
     <div class="info">
 
-        إذا كان التوكن Fine-grained:
+        ZIP
 
-        <br>
+        →
+        
+        قراءة الملفات
 
-        <code>Repository access</code>
-        → اختر المستودع
+        →
 
-        <br>
+        Git Blob
 
-        <code>Contents</code>
-        → <b>Read and write</b>
+        →
+
+        Blob SHA
+
+        →
+
+        Git Tree
+
+        →
+
+        Commit
+
+        →
+
+        main
 
         <br><br>
 
-        اللوحة لا تحفظ التوكن في
-        <code>localStorage</code>.
+        كل ملف يحتفظ بمحتواه الأصلي.
+
+        <br>
+
+        ملفات Swift وYAML وJSON والصور والملفات الثنائية
+        لا يتم تحويل محتواها إلى Base64 داخل المستودع.
 
     </div>
 
@@ -407,16 +488,24 @@ code{
 
 <script>
 
-const API = "https://api.github.com";
+const API =
+    "https://api.github.com";
 
-const $ = id => document.getElementById(id);
 
+const $ =
+    id => document.getElementById(id);
+
+
+/* ------------------------------
+   File selected
+------------------------------ */
 
 $("zipFile").addEventListener(
     "change",
     () => {
 
-        const file = $("zipFile").files[0];
+        const file =
+            $("zipFile").files[0];
 
         $("fileName").textContent =
             file
@@ -427,13 +516,19 @@ $("zipFile").addEventListener(
 );
 
 
+/* ------------------------------
+   Config
+------------------------------ */
+
 function config(){
 
     return {
 
-        token: $("token").value.trim(),
+        token:
+            $("token").value.trim(),
 
-        repo: $("repo").value.trim(),
+        repo:
+            $("repo").value.trim(),
 
         branch:
             $("branch").value.trim()
@@ -448,33 +543,54 @@ function config(){
 }
 
 
+/* ------------------------------
+   Status
+------------------------------ */
+
 function setStatus(
     text,
     type = ""
 ){
 
-    const el = $("status");
+    const element =
+        $("status");
 
-    el.textContent = text;
+    element.textContent =
+        text;
 
-    el.className =
+    element.className =
         "status " + type;
 
 }
 
 
-function progress(value){
+/* ------------------------------
+   Progress
+------------------------------ */
+
+function progress(
+    value
+){
 
     $("progressBar").style.width =
         Math.max(
             0,
-            Math.min(100,value)
+            Math.min(
+                100,
+                value
+            )
         ) + "%";
 
 }
 
 
-function headers(token){
+/* ------------------------------
+   GitHub headers
+------------------------------ */
+
+function headers(
+    token
+){
 
     return {
 
@@ -488,84 +604,25 @@ function headers(token){
             "application/json",
 
         "X-GitHub-Api-Version":
-            "2026-03-10"
+            "2022-11-28"
 
     };
 
 }
 
 
+/* ------------------------------
+   GitHub request
+------------------------------ */
+
 async function github(
     path,
     options = {}
 ){
 
-    const c = config();
+    const c =
+        config();
 
-    if(!c.token){
-
-        throw new Error(
-            "أدخل GitHub Token أولاً."
-        );
-
-    }
-
-    const response =
-        await fetch(
-            API + path,
-            {
-                ...options,
-
-                headers:{
-                    ...headers(c.token),
-                    ...(options.headers || {})
-                }
-            }
-        );
-
-    const raw =
-        await response.text();
-
-    let data;
-
-    try{
-
-        data = JSON.parse(raw);
-
-    }catch{
-
-        data = {
-            raw
-        };
-
-    }
-
-    if(!response.ok){
-
-        const error =
-            new Error(
-                data.message ||
-                ("HTTP " + response.status)
-            );
-
-        error.status =
-            response.status;
-
-        error.data =
-            data;
-
-        throw error;
-
-    }
-
-    return data;
-
-}
-
-
-function validate(){
-
-    const c = config();
 
     if(!c.token){
 
@@ -575,6 +632,95 @@ function validate(){
 
     }
 
+
+    const response =
+        await fetch(
+            API + path,
+            {
+
+                ...options,
+
+                headers:{
+                    ...headers(
+                        c.token
+                    ),
+
+                    ...(options.headers || {})
+
+                }
+
+            }
+        );
+
+
+    const raw =
+        await response.text();
+
+
+    let data;
+
+
+    try{
+
+        data =
+            JSON.parse(raw);
+
+    }catch{
+
+        data = {
+            raw
+        };
+
+    }
+
+
+    if(!response.ok){
+
+        const error =
+            new Error(
+                data.message ||
+                "HTTP " +
+                response.status
+            );
+
+
+        error.status =
+            response.status;
+
+
+        error.data =
+            data;
+
+
+        throw error;
+
+    }
+
+
+    return data;
+
+}
+
+
+/* ------------------------------
+   Validation
+------------------------------ */
+
+function validate(){
+
+    const c =
+        config();
+
+
+    if(!c.token){
+
+        throw new Error(
+            "أدخل GitHub Token."
+        );
+
+    }
+
+
     if(
         !/^[^/]+\/[^/]+$/.test(
             c.repo
@@ -582,15 +728,20 @@ function validate(){
     ){
 
         throw new Error(
-            "Repository يجب أن يكون هكذا:\nOWNER/REPOSITORY"
+            "اكتب Repository بهذا الشكل:\nOWNER/REPOSITORY"
         );
 
     }
+
 
     return c;
 
 }
 
+
+/* ------------------------------
+   Connection
+------------------------------ */
 
 async function checkConnection(){
 
@@ -599,29 +750,18 @@ async function checkConnection(){
         const c =
             validate();
 
+
         setStatus(
             "🔎 جاري فحص المستودع..."
         );
 
+
         const repo =
             await github(
-                "/repos/" + c.repo
+                "/repos/" +
+                c.repo
             );
 
-        setStatus(
-            "✅ المستودع موجود\n\n" +
-
-            "Repository: " +
-            repo.full_name +
-
-            "\nPrivate: " +
-            repo.private +
-
-            "\nDefault branch: " +
-            repo.default_branch +
-
-            "\n\nجاري فحص الفرع..."
-        );
 
         const branch =
             await github(
@@ -633,7 +773,9 @@ async function checkConnection(){
                 )
             );
 
+
         setStatus(
+
             "✅ الاتصال ناجح\n\n" +
 
             "Repository: " +
@@ -642,26 +784,22 @@ async function checkConnection(){
             "\nBranch: " +
             branch.name +
 
-            "\nCommit: " +
+            "\nLatest Commit: " +
             branch.commit.sha.substring(
                 0,
                 12
             ) +
 
-            "\n\nالتوكن يستطيع قراءة المستودع.\n" +
-            "الآن نختبر صلاحية الكتابة."
-        );
+            "\n\nجاهز لرفع المشروع."
 
-        /*
-         * لا ننشئ Commit تجريبي.
-         * نكتفي بفحص معلومات المستودع والفرع.
-         */
+        ,"success");
+
 
     }catch(error){
 
-        showGithubError(
+        showError(
             error,
-            "فشل فحص الاتصال"
+            "❌ فشل الاتصال"
         );
 
     }
@@ -669,13 +807,20 @@ async function checkConnection(){
 }
 
 
-function cleanPath(path){
+/* ------------------------------
+   Clean ZIP path
+------------------------------ */
+
+function cleanPath(
+    path
+){
 
     path =
         path.replaceAll(
             "\\",
             "/"
         );
+
 
     while(
         path.startsWith("./")
@@ -686,23 +831,34 @@ function cleanPath(path){
 
     }
 
+
     path =
         path.replace(
             /^\/+/,
             ""
         );
 
+
     return path;
 
 }
 
 
-function skipFile(path){
+/* ------------------------------
+   Skip unwanted files
+------------------------------ */
 
-    if(!path) return true;
+function skipFile(
+    path
+){
+
+    if(!path)
+        return true;
+
 
     if(path.endsWith("/"))
         return true;
+
 
     if(
         path === ".DS_Store" ||
@@ -710,15 +866,13 @@ function skipFile(path){
     )
         return true;
 
+
     if(
         path === "Thumbs.db" ||
         path.endsWith("/Thumbs.db")
     )
         return true;
 
-    /*
-     * لا نرفع .git داخل المشروع
-     */
 
     if(
         path === ".git" ||
@@ -726,15 +880,21 @@ function skipFile(path){
     )
         return true;
 
+
     if(
         path.includes("/.git/")
     )
         return true;
 
+
     return false;
 
 }
 
+
+/* ------------------------------
+   MAIN UPLOAD
+------------------------------ */
 
 async function uploadZip(){
 
@@ -743,10 +903,12 @@ async function uploadZip(){
         const c =
             validate();
 
-        const file =
+
+        const zipFile =
             $("zipFile").files[0];
 
-        if(!file){
+
+        if(!zipFile){
 
             throw new Error(
                 "اختر ملف ZIP أولاً."
@@ -754,28 +916,39 @@ async function uploadZip(){
 
         }
 
-        progress(2);
+
+        progress(1);
+
 
         setStatus(
             "📦 جاري فتح ZIP..."
         );
 
+
         const zip =
             await JSZip.loadAsync(
-                file
+                zipFile
             );
+
 
         const files = [];
 
+
         for(
-            const [name,entry]
+            const [
+                name,
+                entry
+            ]
             of Object.entries(
                 zip.files
             )
         ){
 
             const path =
-                cleanPath(name);
+                cleanPath(
+                    name
+                );
+
 
             if(
                 skipFile(path) ||
@@ -783,31 +956,40 @@ async function uploadZip(){
             )
                 continue;
 
+
             files.push({
+
                 path,
                 entry
+
             });
 
         }
 
+
         if(!files.length){
 
             throw new Error(
-                "الـZIP لا يحتوي ملفات."
+                "لم يتم العثور على ملفات داخل ZIP."
             );
 
         }
 
+
         setStatus(
-            "✅ تم العثور على " +
+
+            "📦 تم العثور على " +
             files.length +
             " ملف.\n\n" +
+
             "جاري قراءة الفرع..."
+
         );
 
-        /*
-         * نحصل على ref الحالي
-         */
+
+        /* ------------------------------
+           Get branch
+        ------------------------------ */
 
         const ref =
             await github(
@@ -819,38 +1001,38 @@ async function uploadZip(){
                 )
             );
 
-        const parentCommitSHA =
+
+        const parentSHA =
             ref.object.sha;
 
 
-        /*
-         * نحصل على commit الحالي
-         */
+        /* ------------------------------
+           Get parent commit
+        ------------------------------ */
 
-        const commit =
+        const parentCommit =
             await github(
                 "/repos/" +
                 c.repo +
                 "/git/commits/" +
-                parentCommitSHA
+                parentSHA
             );
 
+
         const baseTreeSHA =
-            commit.tree.sha;
+            parentCommit.tree.sha;
 
 
-        /*
-         * هنا التغيير المهم:
-         *
-         * لا ننشئ POST /blobs لكل ملف.
-         *
-         * نرسل content مباشرة إلى
-         * POST /git/trees
-         *
-         * GitHub ينشئ الـblob بنفسه.
-         */
+        /* ------------------------------
+           Create BLOBS
+           
+           مهم جداً:
+           هنا Base64 يذهب إلى Git Blob
+           وليس إلى Tree content.
+        ------------------------------ */
 
         const tree = [];
+
 
         for(
             let i = 0;
@@ -861,15 +1043,70 @@ async function uploadZip(){
             const item =
                 files[i];
 
+
             const bytes =
                 await item.entry.async(
                     "uint8array"
                 );
 
+
             const base64 =
                 bytesToBase64(
                     bytes
                 );
+
+
+            setStatus(
+
+                "📤 رفع ملف إلى GitHub...\n\n" +
+
+                (i + 1) +
+                " / " +
+                files.length +
+
+                "\n\n" +
+
+                item.path
+
+            );
+
+
+            /*
+             * Create Blob
+             */
+
+            const blob =
+                await github(
+
+                    "/repos/" +
+                    c.repo +
+                    "/git/blobs",
+
+                    {
+
+                        method:
+                            "POST",
+
+                        body:
+                            JSON.stringify({
+
+                                content:
+                                    base64,
+
+                                encoding:
+                                    "base64"
+
+                            })
+
+                    }
+
+                );
+
+
+            /*
+             * Tree references
+             * the Blob SHA.
+             */
 
             tree.push({
 
@@ -882,74 +1119,74 @@ async function uploadZip(){
                 type:
                     "blob",
 
-                content:
-                    base64,
-
-                encoding:
-                    "base64"
+                sha:
+                    blob.sha
 
             });
 
+
             progress(
+
                 5 +
                 Math.floor(
-                    ((i + 1) /
-                    files.length) *
-                    65
+                    (
+                        (i + 1) /
+                        files.length
+                    ) * 65
                 )
-            );
 
-            setStatus(
-                "📦 تجهيز الملفات...\n\n" +
-
-                (i + 1) +
-                " / " +
-                files.length +
-
-                "\n\n" +
-
-                item.path
             );
 
         }
 
 
-        /*
-         * الحذف الاختياري
-         */
+        /* ------------------------------
+           Optional deletion
+        ------------------------------ */
 
         if(
             $("deleteMissing").checked
         ){
 
             setStatus(
-                "⚠️ جاري قراءة ملفات المستودع..."
+                "⚠️ قراءة الملفات القديمة..."
             );
+
 
             const oldTree =
                 await github(
+
                     "/repos/" +
                     c.repo +
                     "/git/trees/" +
                     baseTreeSHA +
                     "?recursive=1"
+
                 );
+
 
             const keep =
                 new Set(
                     tree.map(
-                        x => x.path
+                        item =>
+                            item.path
                     )
                 );
 
+
             for(
                 const old
-                of (oldTree.tree || [])
+                of (
+                    oldTree.tree ||
+                    []
+                )
             ){
 
                 if(
                     old.type === "blob" &&
-                    !keep.has(old.path)
+                    !keep.has(
+                        old.path
+                    )
                 ){
 
                     tree.push({
@@ -975,24 +1212,25 @@ async function uploadZip(){
         }
 
 
+        /* ------------------------------
+           Create Tree
+        ------------------------------ */
+
         progress(75);
 
+
         setStatus(
-            "🌳 جاري إنشاء Git Tree...\n\n" +
-            "عدد العناصر: " +
-            tree.length
+            "🌳 جاري إنشاء Git Tree..."
         );
 
 
-        /*
-         * Create Tree
-         */
-
         const newTree =
             await github(
+
                 "/repos/" +
                 c.repo +
                 "/git/trees",
+
                 {
 
                     method:
@@ -1010,30 +1248,29 @@ async function uploadZip(){
                         })
 
                 }
+
             );
 
 
-        progress(84);
+        /* ------------------------------
+           Create Commit
+        ------------------------------ */
+
+        progress(85);
 
 
         setStatus(
-            "📝 تم إنشاء Tree.\n\n" +
-            "SHA: " +
-            newTree.sha +
-            "\n\n" +
-            "جاري إنشاء Commit..."
+            "📝 جاري إنشاء Commit..."
         );
 
 
-        /*
-         * Create Commit
-         */
-
         const newCommit =
             await github(
+
                 "/repos/" +
                 c.repo +
                 "/git/commits",
+
                 {
 
                     method:
@@ -1049,34 +1286,37 @@ async function uploadZip(){
                                 newTree.sha,
 
                             parents:[
-                                parentCommitSHA
+                                parentSHA
                             ]
 
                         })
 
                 }
+
             );
 
 
-        progress(93);
+        /* ------------------------------
+           Update branch
+        ------------------------------ */
+
+        progress(94);
 
 
         setStatus(
-            "🔄 جاري تحديث الفرع..."
+            "🔄 جاري تحديث الفرع main..."
         );
 
 
-        /*
-         * Update Branch
-         */
-
         await github(
+
             "/repos/" +
             c.repo +
             "/git/refs/heads/" +
             encodeURIComponent(
                 c.branch
             ),
+
             {
 
                 method:
@@ -1094,6 +1334,7 @@ async function uploadZip(){
                     })
 
             }
+
         );
 
 
@@ -1102,37 +1343,44 @@ async function uploadZip(){
 
         setStatus(
 
-            "🎉 تم بنجاح!\n\n" +
+            "🎉 تم الرفع بنجاح\n\n" +
 
-            "Repository: " +
+            "Repository:\n" +
             c.repo +
 
-            "\nBranch: " +
+            "\n\nBranch:\n" +
             c.branch +
 
-            "\nFiles: " +
+            "\n\nFiles:\n" +
             files.length +
 
             "\n\nCommit:\n" +
             newCommit.sha +
 
-            "\n\nتم إنشاء Commit واحد فقط."
+            "\n\n" +
+
+            "كل ملف تم رفعه بمحتواه الأصلي."
 
         ,"success");
+
 
     }catch(error){
 
         progress(0);
 
-        showGithubError(
+        showError(
             error,
-            "❌ فشل التطبيق"
+            "❌ فشل الرفع"
         );
 
     }
 
 }
 
+
+/* ------------------------------
+   Actions
+------------------------------ */
 
 async function loadActions(){
 
@@ -1141,16 +1389,21 @@ async function loadActions(){
         const c =
             validate();
 
+
         setStatus(
-            "⚙️ جاري جلب آخر Actions..."
+            "⚙️ جاري جلب GitHub Actions..."
         );
+
 
         const data =
             await github(
+
                 "/repos/" +
                 c.repo +
                 "/actions/runs?per_page=10"
+
             );
+
 
         if(
             !data.workflow_runs ||
@@ -1165,43 +1418,51 @@ async function loadActions(){
 
         }
 
-        let text =
+
+        let output =
             "⚙️ آخر GitHub Actions\n\n";
 
-        data.workflow_runs
-            .forEach(
-                (run,index) => {
 
-                    text +=
+        data.workflow_runs.forEach(
+            (
+                run,
+                index
+            ) => {
 
-                        (index + 1) +
-                        ". " +
-                        run.name +
+                output +=
 
-                        "\nStatus: " +
-                        run.status +
+                    (index + 1) +
+                    ". " +
+                    run.name +
 
-                        "\nResult: " +
-                        (
-                            run.conclusion ||
-                            "-"
-                        ) +
+                    "\nStatus: " +
+                    run.status +
 
-                        "\nRun ID: " +
-                        run.id +
+                    "\nResult: " +
+                    (
+                        run.conclusion ||
+                        "-"
+                    ) +
 
-                        "\n\n";
+                    "\nRun ID: " +
+                    run.id +
 
-                }
-            );
+                    "\n\n";
 
-        setStatus(text);
+            }
+        );
+
+
+        setStatus(
+            output
+        );
+
 
     }catch(error){
 
-        showGithubError(
+        showError(
             error,
-            "فشل جلب Actions"
+            "❌ فشل جلب Actions"
         );
 
     }
@@ -1209,16 +1470,21 @@ async function loadActions(){
 }
 
 
-function showGithubError(
+/* ------------------------------
+   Error
+------------------------------ */
+
+function showError(
     error,
     title
 ){
 
-    let message =
+    let text =
         title +
         "\n\n";
 
-    message +=
+
+    text +=
         "HTTP: " +
         (
             error.status ||
@@ -1226,14 +1492,16 @@ function showGithubError(
         ) +
         "\n\n";
 
-    message +=
+
+    text +=
         "Message: " +
         error.message +
         "\n\n";
 
+
     if(error.data){
 
-        message +=
+        text +=
             JSON.stringify(
                 error.data,
                 null,
@@ -1242,57 +1510,70 @@ function showGithubError(
 
     }
 
-    if(error.status === 404){
 
-        message +=
+    if(
+        error.status === 403
+    ){
 
-            "\n\n🔴 404 غالباً يعني:\n" +
+        text +=
 
-            "1. التوكن لا يملك وصولاً للمستودع.\n" +
+            "\n\n🔴 GitHub رفض العملية.\n" +
 
-            "2. Fine-grained Token غير مربوط بمستودع 710.\n" +
+            "تأكد أن Token لديه:\n" +
 
-            "3. Contents ليس Read and write.\n" +
-
-            "4. اسم Repository أو Branch غير صحيح.\n";
-
-    }
-
-    if(error.status === 403){
-
-        message +=
-
-            "\n\n🔴 403 يعني غالباً أن صلاحية الكتابة مرفوضة.\n" +
-
-            "فعّل Contents → Read and write في التوكن.";
+            "Contents → Read and write";
 
     }
 
-    if(error.status === 409){
 
-        message +=
+    if(
+        error.status === 404
+    ){
 
-            "\n\n🟠 409 يعني أن الفرع تغير أثناء العملية.\n" +
+        text +=
 
-            "أعد المحاولة.";
+            "\n\n🔴 GitHub لم يجد المورد.\n" +
+
+            "تأكد من Repository وBranch وأن Token لديه وصول للمستودع.";
+
+    }
+
+
+    if(
+        error.status === 409
+    ){
+
+        text +=
+
+            "\n\n🟠 حدث تعارض لأن الفرع تغير.\n" +
+
+            "أعد العملية مرة أخرى.";
 
     }
 
-    if(error.status === 422){
 
-        message +=
+    if(
+        error.status === 422
+    ){
 
-            "\n\n🟠 422 يعني أن GitHub رفض بيانات Tree أو Commit.";
+        text +=
+
+            "\n\n🟠 GitHub رفض بيانات Git Tree/Blob/Commit.";
 
     }
+
 
     setStatus(
-        message,
+        text,
         "error"
     );
 
 }
 
+
+/* ------------------------------
+   Uint8Array → Base64
+------------------------------ */
 
 function bytesToBase64(
     bytes
@@ -1302,6 +1583,7 @@ function bytesToBase64(
 
     const chunk =
         0x8000;
+
 
     for(
         let i = 0;
@@ -1318,6 +1600,7 @@ function bytesToBase64(
             );
 
     }
+
 
     return btoa(
         binary
