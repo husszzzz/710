@@ -1,185 +1,1146 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="utf-8">
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#7c3aed">
 <title>Zone66 Control Panel</title>
-<style>
-:root{--bg:#09090b;--card:#14141a;--card2:#1b1b24;--line:#292936;--txt:#f5f5f7;--muted:#a1a1aa;--p:#7c3aed;--p2:#a855f7;--ok:#22c55e;--err:#ef4444}
-*{box-sizing:border-box}body{margin:0;background:linear-gradient(180deg,#0b0712,#09090b 35%);color:var(--txt);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sans-serif}
-.wrap{max-width:900px;margin:auto;padding:18px 14px 50px}.head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}
-.logo{width:48px;height:48px;border-radius:15px;background:linear-gradient(135deg,var(--p),var(--p2));display:grid;place-items:center;font-weight:900;box-shadow:0 10px 35px #7c3aed55}.title{flex:1}.title h1{margin:0;font-size:22px}.title p{margin:4px 0 0;color:var(--muted);font-size:13px}
-.card{background:linear-gradient(180deg,#171720,#111117);border:1px solid var(--line);border-radius:20px;padding:16px;margin:12px 0;box-shadow:0 15px 40px #0005}
-h2{font-size:17px;margin:0 0 12px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}@media(max-width:650px){.grid{grid-template-columns:1fr}}
-label{display:block;color:#d4d4d8;font-size:12px;margin:8px 0 6px}input,select,textarea{width:100%;background:#0d0d12;border:1px solid var(--line);border-radius:12px;color:var(--txt);padding:12px;font:inherit;outline:none}textarea{min-height:260px;direction:ltr;text-align:left;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px}
-button{border:0;border-radius:12px;padding:12px 15px;font-weight:800;color:white;background:linear-gradient(135deg,var(--p),var(--p2));cursor:pointer}button.secondary{background:#24242e;border:1px solid var(--line)}button.danger{background:#3a171b;color:#fecaca;border:1px solid #632027}button:disabled{opacity:.45}
-.row{display:flex;gap:9px;flex-wrap:wrap;align-items:center}.status{margin-top:10px;padding:11px;border-radius:12px;background:#101016;border:1px solid var(--line);font-size:13px;white-space:pre-wrap}.ok{border-color:#14532d;color:#bbf7d0}.err{border-color:#7f1d1d;color:#fecaca}
-.small{font-size:12px;color:var(--muted);line-height:1.7}.pill{display:inline-block;background:#24163b;color:#d8b4fe;border:1px solid #4c1d95;border-radius:999px;padding:4px 9px;font-size:11px}
-.filebox{border:1px dashed #4c1d95;border-radius:15px;padding:18px;text-align:center;background:#110c1b}.filebox input{display:none}.filebox label{cursor:pointer;margin:0;font-size:14px}
-.list{max-height:260px;overflow:auto;border:1px solid var(--line);border-radius:12px}.item{padding:10px 12px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:10px;font-size:12px}.item:last-child{border-bottom:0}.item .path{direction:ltr;text-align:left;overflow:hidden;text-overflow:ellipsis}
-pre{white-space:pre-wrap;word-break:break-word;background:#0b0b10;padding:12px;border-radius:12px;color:#d4d4d8;font-size:12px;max-height:300px;overflow:auto}
-</style>
-</head>
-<body>
-<div class="wrap">
-  <div class="head">
-    <div class="logo">Z66</div>
-    <div class="title"><h1>Zone66 Control Panel</h1><p>رفع حزمة التعديلات → مراجعة → Commit واحد إلى GitHub</p></div>
-    <span class="pill">iPhone Ready</span>
-  </div>
-
-  <div class="card">
-    <h2>🔐 اتصال GitHub</h2>
-    <div class="grid">
-      <div><label>GitHub Token</label><input id="token" type="password" autocomplete="off" placeholder="الصق Fine-grained token هنا"></div>
-      <div><label>Repository</label><input id="repo" value="husszzzz/Zone66-Player"></div>
-      <div><div><label>Branch</label><input id="branch" value="main"></div></div>
-      <div><div><label>Commit Message</label><input id="message" value="Apply Zone66 Control Panel update"></div></div>
-    </div>
-    <p class="small">التوكن يبقى في الذاكرة أثناء فتح الصفحة فقط ولا يتم حفظه في LocalStorage أو Cookie. المطلوب عادةً Fine-grained token بصلاحية Contents: Read and write. لتعديل ملفات workflow يلزم Workflows: Read and write.</p>
-    <div class="row"><button onclick="connect()">اختبار الاتصال وقراءة الفرع</button></div>
-    <div id="connectStatus" class="status">غير متصل</div>
-  </div>
-
-  <div class="card">
-    <h2>📦 ارفع ملف ZIP المعدّل</h2>
-    <div class="filebox">
-      <label for="zip">اضغط هنا واختر ZIP من تطبيق الملفات في الآيفون</label>
-      <input id="zip" type="file" accept=".zip,application/zip">
-    </div>
-    <p class="small">ارفع ZIP يحتوي الملفات التي تريد تطبيقها. إذا كان داخل ZIP مجلد إضافي مثل <b>Zone66-Player/</b> ستقوم اللوحة بمحاولة اكتشافه تلقائياً.</p>
-    <div id="zipStatus" class="status">لم يتم اختيار ملف.</div>
-    <div id="fileList" class="list" style="display:none"></div>
-  </div>
-
-  <div class="card">
-    <h2>🚀 تطبيق التعديلات</h2>
-    <p class="small">اللوحة تقرأ الفرع الحالي، تنشئ Blobs للملفات، تنشئ Git Tree جديداً فوق الشجرة الحالية، ثم تعمل Commit واحد وتحدّث الفرع. لا يتم حذف الملفات الموجودة إلا إذا فعّلت خيار الحذف أدناه.</p>
-    <label><input id="deleteMissing" type="checkbox" style="width:auto"> حذف الملفات الموجودة في GitHub إذا كانت غير موجودة داخل ZIP <b>(غير مفعّل افتراضياً)</b></label>
-    <div class="row">
-      <button id="applyBtn" onclick="applyZip()" disabled>🚀 تطبيق ZIP + Commit</button>
-      <button class="secondary" onclick="clearAll()">مسح</button>
-    </div>
-    <div id="applyStatus" class="status">بانتظار الاتصال وملف ZIP.</div>
-  </div>
-
-  <div class="card">
-    <h2>⚙️ GitHub Actions</h2>
-    <div class="row">
-      <button class="secondary" onclick="loadRuns()">تحديث آخر عمليات البناء</button>
-    </div>
-    <pre id="runs">لم يتم تحميل العمليات بعد.</pre>
-  </div>
-</div>
 
 <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
-<script>
-let zipFile=null, zipEntries=[], connected=false;
 
-const $=id=>document.getElementById(id);
-function auth(){return {Authorization:"Bearer "+$("token").value.trim(),Accept:"application/vnd.github+json","X-GitHub-Api-Version":"2022-11-28"}}
-function apiBase(){return "https://api.github.com/repos/"+$("repo").value.trim()}
-async function gh(url,opt={}){let r=await fetch(url,{...opt,headers:{...auth(),...(opt.headers||{})}});let t=await r.text();let d;try{d=JSON.parse(t)}catch{d=t}if(!r.ok)throw new Error((d&&d.message)||("GitHub HTTP "+r.status));return d}
-
-async function connect(){
-  try{
-    $("connectStatus").className="status";
-    $("connectStatus").textContent="جاري الاتصال...";
-    const d=await gh(apiBase()+"/git/ref/heads/"+encodeURIComponent($("branch").value.trim()));
-    connected=true;
-    $("connectStatus").className="status ok";
-    $("connectStatus").textContent="متصل بنجاح\nBranch: "+$("branch").value.trim()+"\nCommit: "+d.object.sha;
-    updateButton();
-  }catch(e){connected=false;$("connectStatus").className="status err";$("connectStatus").textContent="فشل الاتصال: "+e.message;updateButton()}
+<style>
+*{
+  box-sizing:border-box;
+  -webkit-tap-highlight-color:transparent;
 }
 
-$("zip").addEventListener("change",async e=>{
-  zipFile=e.target.files[0];zipEntries=[];
-  if(!zipFile){$("zipStatus").textContent="لم يتم اختيار ملف.";updateButton();return}
-  try{
-    const z=await JSZip.loadAsync(zipFile);
-    for(const [name,f] of Object.entries(z.files)){
-      if(!f.dir) zipEntries.push({name,file:f});
+body{
+  margin:0;
+  background:#08080d;
+  color:#f5f5f7;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+}
+
+.container{
+  width:min(900px,94%);
+  margin:auto;
+  padding:28px 0 50px;
+}
+
+.header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:18px;
+  margin-bottom:25px;
+}
+
+.logo{
+  width:72px;
+  height:72px;
+  border-radius:22px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:900;
+  font-size:25px;
+  background:linear-gradient(135deg,#7c3aed,#a855f7);
+  box-shadow:0 15px 45px rgba(124,58,237,.35);
+}
+
+h1{
+  margin:0;
+  font-size:32px;
+}
+
+.subtitle{
+  color:#aaaab5;
+  margin-top:7px;
+  font-size:16px;
+}
+
+.badge{
+  display:inline-block;
+  padding:8px 14px;
+  border:1px solid #7c3aed;
+  border-radius:999px;
+  color:#c084fc;
+  font-size:14px;
+}
+
+.card{
+  background:linear-gradient(180deg,#171720,#111118);
+  border:1px solid #292936;
+  border-radius:25px;
+  padding:24px;
+  margin-bottom:20px;
+  box-shadow:0 15px 45px rgba(0,0,0,.25);
+}
+
+.card h2{
+  margin:0 0 20px;
+  font-size:23px;
+}
+
+label{
+  display:block;
+  color:#c9c9d1;
+  margin:15px 4px 8px;
+}
+
+input[type=text],
+input[type=password],
+input[type=file]{
+  width:100%;
+  border:1px solid #30303d;
+  background:#0c0c12;
+  color:white;
+  border-radius:17px;
+  padding:16px;
+  font-size:16px;
+  outline:none;
+}
+
+input:focus{
+  border-color:#8b5cf6;
+  box-shadow:0 0 0 3px rgba(124,58,237,.15);
+}
+
+button{
+  border:0;
+  border-radius:16px;
+  padding:15px 20px;
+  font-size:16px;
+  font-weight:800;
+  color:white;
+  cursor:pointer;
+}
+
+.primary{
+  background:linear-gradient(135deg,#7c3aed,#a855f7);
+  box-shadow:0 10px 30px rgba(124,58,237,.28);
+}
+
+.secondary{
+  background:#252531;
+}
+
+.danger{
+  background:#3a171d;
+  color:#ffb4bd;
+}
+
+button:disabled{
+  opacity:.5;
+  cursor:not-allowed;
+}
+
+.buttons{
+  display:flex;
+  gap:12px;
+  flex-wrap:wrap;
+  margin-top:20px;
+}
+
+.status{
+  margin-top:18px;
+  padding:17px;
+  border-radius:17px;
+  white-space:pre-wrap;
+  word-break:break-word;
+  display:none;
+  line-height:1.65;
+}
+
+.success{
+  display:block;
+  border:1px solid #15803d;
+  background:rgba(22,101,52,.12);
+  color:#9df2b9;
+}
+
+.error{
+  display:block;
+  border:1px solid #dc2626;
+  background:rgba(127,29,29,.12);
+  color:#ffb9b9;
+}
+
+.info{
+  display:block;
+  border:1px solid #4338ca;
+  background:rgba(67,56,202,.10);
+  color:#c7c8ff;
+}
+
+.warning{
+  display:block;
+  border:1px solid #ca8a04;
+  background:rgba(202,138,4,.10);
+  color:#ffe49a;
+}
+
+.help{
+  color:#9b9ba7;
+  line-height:1.8;
+  font-size:14px;
+}
+
+.file-list{
+  max-height:320px;
+  overflow:auto;
+  border:1px solid #2b2b38;
+  border-radius:17px;
+  margin-top:15px;
+}
+
+.file{
+  padding:12px 15px;
+  border-bottom:1px solid #252530;
+  color:#d7d7df;
+  font-size:14px;
+  direction:ltr;
+  text-align:left;
+}
+
+.file:last-child{
+  border-bottom:0;
+}
+
+.progress{
+  height:9px;
+  background:#252531;
+  border-radius:99px;
+  overflow:hidden;
+  margin-top:15px;
+  display:none;
+}
+
+.progress-bar{
+  width:0%;
+  height:100%;
+  background:linear-gradient(90deg,#7c3aed,#c084fc);
+  transition:.25s;
+}
+
+.run{
+  background:#0c0c12;
+  border:1px solid #292936;
+  border-radius:15px;
+  padding:13px;
+  margin-top:10px;
+}
+
+.run a{
+  color:#c084fc;
+  text-decoration:none;
+}
+
+.small{
+  color:#888895;
+  font-size:13px;
+}
+
+.footer{
+  text-align:center;
+  color:#777783;
+  margin-top:30px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <div class="header">
+    <div>
+      <span class="badge">iPhone Ready</span>
+      <h1>Zone66 Control Panel</h1>
+      <div class="subtitle">
+        رفع ZIP → مراجعة → Commit واحد → GitHub
+      </div>
+    </div>
+
+    <div class="logo">Z66</div>
+  </div>
+
+  <!-- GitHub -->
+  <div class="card">
+
+    <h2>🔐 اتصال GitHub</h2>
+
+    <label>GitHub Token</label>
+    <input
+      id="token"
+      type="password"
+      autocomplete="off"
+      placeholder="ghp_... أو github_pat_..."
+    >
+
+    <label>Repository</label>
+    <input
+      id="repo"
+      type="text"
+      value="husszzzz/Zone66-Player"
+    >
+
+    <label>Branch</label>
+    <input
+      id="branch"
+      type="text"
+      value="main"
+    >
+
+    <label>Commit Message</label>
+    <input
+      id="message"
+      type="text"
+      value="Update Zone66 Player"
+    >
+
+    <div class="help">
+      التوكن يبقى داخل المتصفح ولا يتم حفظه في LocalStorage أو Cookie.
+      <br>
+      لتعديل ملفات <b>.github/workflows</b> يجب أن يمتلك التوكن صلاحية
+      <b>Contents: Read and write</b> و <b>Workflows: Read and write</b>.
+    </div>
+
+    <div class="buttons">
+      <button class="primary" id="testBtn" onclick="testConnection()">
+        🔌 اختبار الاتصال وقراءة الفرع
+      </button>
+    </div>
+
+    <div id="connectionStatus" class="status"></div>
+
+  </div>
+
+  <!-- ZIP -->
+  <div class="card">
+
+    <h2>📦 رفع ZIP للمشروع</h2>
+
+    <label>ملف ZIP</label>
+    <input
+      id="zipFile"
+      type="file"
+      accept=".zip,application/zip"
+    >
+
+    <div class="help">
+      ارفع ZIP الذي يحتوي الملفات التي تريد تحديثها.
+      الملفات الموجودة في GitHub والتي ليست داخل ZIP لن يتم حذفها.
+    </div>
+
+    <div id="fileList" class="file-list" style="display:none"></div>
+
+    <div class="buttons">
+      <button class="secondary" onclick="clearZip()">
+        مسح
+      </button>
+
+      <button
+        class="primary"
+        id="applyBtn"
+        onclick="applyZip()"
+      >
+        🚀 تطبيق ZIP + Commit
+      </button>
+    </div>
+
+    <div class="progress" id="progress">
+      <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <div id="applyStatus" class="status"></div>
+
+  </div>
+
+  <!-- Actions -->
+  <div class="card">
+
+    <h2>⚙️ GitHub Actions</h2>
+
+    <div class="buttons">
+      <button
+        class="secondary"
+        onclick="loadActions()"
+      >
+        تحديث آخر عمليات البناء
+      </button>
+    </div>
+
+    <div id="actions"></div>
+
+  </div>
+
+  <div class="footer">
+    Zone66 Control Panel
+  </div>
+
+</div>
+
+<script>
+
+const API = "https://api.github.com";
+const API_VERSION = "2026-03-10";
+
+let zipEntries = [];
+
+
+/* =========================================================
+   Helpers
+========================================================= */
+
+function $(id){
+  return document.getElementById(id);
+}
+
+function getToken(){
+  return $("token").value.trim();
+}
+
+function getRepo(){
+  return $("repo").value.trim();
+}
+
+function getBranch(){
+  return $("branch").value.trim();
+}
+
+function getMessage(){
+  return $("message").value.trim() || "Update Zone66 Player";
+}
+
+function parseRepo(){
+  const parts = getRepo().split("/").filter(Boolean);
+
+  if(parts.length !== 2){
+    throw new Error(
+      "Repository يجب أن يكون بهذا الشكل:\nowner/repository"
+    );
+  }
+
+  return {
+    owner: parts[0],
+    repo: parts[1]
+  };
+}
+
+function headers(){
+  const token = getToken();
+
+  if(!token){
+    throw new Error("ضع GitHub Token أولاً.");
+  }
+
+  return {
+    "Accept":"application/vnd.github+json",
+    "Authorization":"Bearer " + token,
+    "X-GitHub-Api-Version":API_VERSION,
+    "Content-Type":"application/json"
+  };
+}
+
+async function github(path, options = {}){
+
+  const response = await fetch(API + path, {
+    ...options,
+    headers:{
+      ...headers(),
+      ...(options.headers || {})
     }
-    $("zipStatus").className="status ok";
-    $("zipStatus").textContent="تمت قراءة ZIP: "+zipEntries.length+" ملف";
-    const list=$("fileList");list.style.display="block";
-    list.innerHTML=zipEntries.slice(0,300).map(x=>`<div class="item"><span class="path">${esc(x.name)}</span><span class="pill">ملف</span></div>`).join("");
-    if(zipEntries.length>300) list.innerHTML+=`<div class="item">... والباقي ${zipEntries.length-300} ملفات</div>`;
-    updateButton();
-  }catch(e){$("zipStatus").className="status err";$("zipStatus").textContent="ZIP غير صالح: "+e.message;updateButton()}
+  });
+
+  const text = await response.text();
+
+  let data;
+
+  try{
+    data = text ? JSON.parse(text) : {};
+  }catch{
+    data = {
+      raw:text
+    };
+  }
+
+  if(!response.ok){
+
+    let message =
+      data.message ||
+      data.raw ||
+      response.statusText ||
+      "Unknown GitHub error";
+
+    const details = [];
+
+    if(data.documentation_url){
+      details.push(
+        "Documentation: " + data.documentation_url
+      );
+    }
+
+    if(data.errors){
+      try{
+        details.push(
+          "Details: " +
+          JSON.stringify(data.errors, null, 2)
+        );
+      }catch{}
+    }
+
+    const error = new Error(
+      `GitHub API Error
+HTTP ${response.status}
+Endpoint: ${path}
+Message: ${message}
+${details.join("\n")}`
+    );
+
+    error.status = response.status;
+    error.data = data;
+
+    throw error;
+  }
+
+  return data;
+}
+
+function showStatus(id, type, text){
+
+  const el = $(id);
+
+  el.className = "status " + type;
+  el.textContent = text;
+}
+
+function progress(value){
+
+  $("progress").style.display = "block";
+  $("progressBar").style.width =
+    Math.max(0, Math.min(100, value)) + "%";
+}
+
+function setBusy(busy){
+
+  $("applyBtn").disabled = busy;
+  $("testBtn").disabled = busy;
+}
+
+
+/* =========================================================
+   Test GitHub connection
+========================================================= */
+
+async function testConnection(){
+
+  try{
+
+    setBusy(true);
+
+    showStatus(
+      "connectionStatus",
+      "info",
+      "جاري فحص المستودع والفرع..."
+    );
+
+    const {owner, repo} = parseRepo();
+    const branch = getBranch();
+
+    /* 1. Repository */
+    const repository = await github(
+      `/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}`
+    );
+
+    /* 2. Branch reference */
+    const ref = await github(
+      `/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}/git/ref/heads/${encodeURIComponent(branch)}`
+    );
+
+    const commitSha = ref.object.sha;
+
+    /* 3. Commit */
+    const commit = await github(
+      `/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}/git/commits/${commitSha}`
+    );
+
+    showStatus(
+      "connectionStatus",
+      "success",
+      `متصل بنجاح ✅
+
+Repository: ${repository.full_name}
+Branch: ${branch}
+Commit: ${commitSha}
+
+الـ Token قادر على قراءة المستودع والفرع.`
+    );
+
+  }catch(error){
+
+    showStatus(
+      "connectionStatus",
+      "error",
+      "فشل الاتصال ❌\n\n" + error.message
+    );
+
+  }finally{
+
+    setBusy(false);
+
+  }
+}
+
+
+/* =========================================================
+   ZIP loading
+========================================================= */
+
+$("zipFile").addEventListener("change", async function(){
+
+  const file = this.files[0];
+
+  if(!file){
+    return;
+  }
+
+  try{
+
+    if(!file.name.toLowerCase().endsWith(".zip")){
+      throw new Error("الملف يجب أن يكون ZIP.");
+    }
+
+    showStatus(
+      "applyStatus",
+      "info",
+      "جاري قراءة ZIP..."
+    );
+
+    const buffer = await file.arrayBuffer();
+
+    const zip = await JSZip.loadAsync(buffer);
+
+    zipEntries = [];
+
+    zip.forEach((relativePath, entry) => {
+
+      if(entry.dir){
+        return;
+      }
+
+      const normalized =
+        normalizePath(relativePath);
+
+      if(!normalized){
+        return;
+      }
+
+      zipEntries.push({
+        path: normalized,
+        entry: entry
+      });
+
+    });
+
+    if(!zipEntries.length){
+      throw new Error("الـ ZIP لا يحتوي ملفات.");
+    }
+
+    renderFiles();
+
+    showStatus(
+      "applyStatus",
+      "success",
+      `تمت قراءة ZIP بنجاح ✅
+
+عدد الملفات: ${zipEntries.length}
+
+الملفات الموجودة في GitHub والتي ليست داخل ZIP لن يتم حذفها.`
+    );
+
+  }catch(error){
+
+    zipEntries = [];
+
+    showStatus(
+      "applyStatus",
+      "error",
+      "تعذر قراءة ZIP ❌\n\n" + error.message
+    );
+
+  }
+
 });
 
-function updateButton(){$("applyBtn").disabled=!(connected&&zipEntries.length)}
-function esc(s){return s.replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
-function normalizePath(n){
-  n=n.replace(/^\.\/+/,"").replace(/\\/g,"/");
-  const parts=n.split("/").filter(Boolean);
-  while(parts.length && (parts[0]==="__MACOSX" || parts[0]===".git")) parts.shift();
+
+function normalizePath(path){
+
+  path = String(path || "")
+    .replace(/\\/g,"/")
+    .replace(/^\/+/,"")
+    .replace(/^\.\//,"");
+
+  const parts = path
+    .split("/")
+    .filter(x => x && x !== ".");
+
+  if(!parts.length){
+    return "";
+  }
+
+  if(parts.some(x => x === "..")){
+    return "";
+  }
+
   return parts.join("/");
 }
-function commonRoot(entries){
-  const paths=entries.map(x=>normalizePath(x.name)).filter(Boolean);
-  if(!paths.length)return "";
-  const first=paths[0].split("/");
-  if(first.length<2)return "";
-  const root=first[0]+"/";
-  if(paths.every(p=>p.startsWith(root))) return root;
-  return "";
+
+
+function renderFiles(){
+
+  const box = $("fileList");
+
+  box.innerHTML = "";
+
+  zipEntries
+    .sort((a,b) =>
+      a.path.localeCompare(b.path)
+    )
+    .forEach(item => {
+
+      const div = document.createElement("div");
+
+      div.className = "file";
+      div.textContent = item.path;
+
+      box.appendChild(div);
+
+    });
+
+  box.style.display = "block";
 }
+
+
+function clearZip(){
+
+  $("zipFile").value = "";
+  zipEntries = [];
+
+  $("fileList").innerHTML = "";
+  $("fileList").style.display = "none";
+
+  $("progress").style.display = "none";
+  $("progressBar").style.width = "0%";
+
+  $("applyStatus").className = "status";
+  $("applyStatus").textContent = "";
+}
+
+
+/* =========================================================
+   Base64
+========================================================= */
+
+function bytesToBase64(bytes){
+
+  let binary = "";
+
+  const chunk = 0x8000;
+
+  for(
+    let i = 0;
+    i < bytes.length;
+    i += chunk
+  ){
+
+    binary += String.fromCharCode(
+      ...bytes.subarray(
+        i,
+        Math.min(i + chunk, bytes.length)
+      )
+    );
+
+  }
+
+  return btoa(binary);
+}
+
+
+/* =========================================================
+   Apply ZIP
+========================================================= */
 
 async function applyZip(){
-  if(!connected||!zipEntries.length)return;
-  const btn=$("applyBtn");btn.disabled=true;
+
   try{
-    $("applyStatus").className="status";
-    $("applyStatus").textContent="1/5 قراءة حالة GitHub...";
-    const branch=$("branch").value.trim();
-    const ref=await gh(apiBase()+"/git/ref/heads/"+encodeURIComponent(branch));
-    const baseSha=ref.object.sha;
-    const commit=await gh(apiBase()+"/git/commits/"+baseSha);
-    const baseTree=commit.tree.sha;
 
-    let root=commonRoot(zipEntries);
-    let files=zipEntries.map(x=>({path:normalizePath(x.name).replace(new RegExp("^"+escapeRegExp(root)),""),file:x.file})).filter(x=>x.path);
-    const seen=new Set();files=files.filter(x=>!seen.has(x.path)&&seen.add(x.path));
-
-    $("applyStatus").textContent="2/5 رفع Blobs: 0 / "+files.length;
-    const tree=[];
-    for(let i=0;i<files.length;i++){
-      const bytes=await files[i].file.async("base64");
-      const blob=await gh(apiBase()+"/git/blobs",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({content:bytes,encoding:"base64"})});
-      tree.push({path:files[i].path,mode:"100644",type:"blob",sha:blob.sha});
-      $("applyStatus").textContent="2/5 رفع Blobs: "+(i+1)+" / "+files.length;
+    if(!zipEntries.length){
+      throw new Error(
+        "ارفع ZIP أولاً."
+      );
     }
 
-    $("applyStatus").textContent="3/5 إنشاء Git Tree...";
-    const newTree=await gh(apiBase()+"/git/trees",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({base_tree:baseTree,tree})});
+    setBusy(true);
+    progress(2);
 
-    $("applyStatus").textContent="4/5 إنشاء Commit...";
-    const c=await gh(apiBase()+"/git/commits",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({message:$("message").value.trim()||"Apply Zone66 update",tree:newTree.sha,parents:[baseSha]})});
+    showStatus(
+      "applyStatus",
+      "info",
+      "🚀 بدء تطبيق ZIP..."
+    );
 
-    $("applyStatus").textContent="5/5 تحديث Branch...";
-    await gh(apiBase()+"/git/refs/heads/"+encodeURIComponent(branch),{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify({sha:c.sha,force:false})});
+    const {owner, repo} = parseRepo();
+    const branch = getBranch();
 
-    $("applyStatus").className="status ok";
-    $("applyStatus").textContent="تم بنجاح ✅\nCommit: "+c.sha+"\nتم تطبيق "+files.length+" ملف على "+branch;
-    await loadRuns();
-  }catch(e){
-    $("applyStatus").className="status err";
-    $("applyStatus").textContent="فشل التطبيق ❌\n"+e.message+"\nإذا كان الخطأ 403 فتأكد من Contents: Read and write.";
-  }finally{updateButton()}
+    if(!branch){
+      throw new Error("Branch فارغ.");
+    }
+
+    /* -----------------------------------------------------
+       STEP 1
+       Verify repository
+    ----------------------------------------------------- */
+
+    progress(5);
+
+    showStatus(
+      "applyStatus",
+      "info",
+      "المرحلة 1/6\nفحص المستودع..."
+    );
+
+    await github(
+      `/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}`
+    );
+
+
+    /* -----------------------------------------------------
+       STEP 2
+       Get branch
+    ----------------------------------------------------- */
+
+    progress(10);
+
+    showStatus(
+      "applyStatus",
+      "info",
+      "المرحلة 2/6\nقراءة الفرع الحالي..."
+    );
+
+    const ref = await github(
+      `/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}/git/ref/heads/${encodeURIComponent(branch)}`
+    );
+
+    const parentSha = ref.object.sha;
+
+
+    /* -----------------------------------------------------
+       STEP 3
+       Get current commit
+    ----------------------------------------------------- */
+
+    progress(15);
+
+    showStatus(
+      "applyStatus",
+      "info",
+      "المرحلة 3/6\nقراءة الشجرة الحالية..."
+    );
+
+    const parentCommit = await github(
+      `/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}/git/commits/${parentSha}`
+    );
+
+    const baseTreeSha =
+      parentCommit.tree.sha;
+
+
+    /* -----------------------------------------------------
+       STEP 4
+       Create blobs
+    ----------------------------------------------------- */
+
+    const treeEntries = [];
+
+    for(let i = 0; i < zipEntries.length; i++){
+
+      const item = zipEntries[i];
+
+      const bytes =
+        await item.entry.async("uint8array");
+
+      const base64 =
+        bytesToBase64(bytes);
+
+      const blob = await github(
+        `/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}/git/blobs`,
+        {
+          method:"POST",
+          body:JSON.stringify({
+            content:base64,
+            encoding:"base64"
+          })
+        }
+      );
+
+      treeEntries.push({
+        path:item.path,
+        mode:"100644",
+        type:"blob",
+        sha:blob.sha
+      });
+
+      const percent =
+        20 +
+        Math.round(
+          ((i + 1) / zipEntries.length) * 35
+        );
+
+      progress(percent);
+
+      showStatus(
+        "applyStatus",
+        "info",
+        `المرحلة 4/6
+رفع ملفات Git objects...
+
+${i + 1} / ${zipEntries.length}
+
+${item.path}`
+      );
+
+    }
+
+
+    /* -----------------------------------------------------
+       STEP 5
+       Create Git Tree
+    ----------------------------------------------------- */
+
+    progress(60);
+
+    showStatus(
+      "applyStatus",
+      "info",
+      "المرحلة 5/6\nإنشاء Git Tree..."
+    );
+
+    const tree = await github(
+      `/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}/git/trees`,
+      {
+        method:"POST",
+        body:JSON.stringify({
+          base_tree:baseTreeSha,
+          tree:treeEntries
+        })
+      }
+    );
+
+
+    /* -----------------------------------------------------
+       STEP 6
+       Create commit
+    ----------------------------------------------------- */
+
+    progress(75);
+
+    showStatus(
+      "applyStatus",
+      "info",
+      "المرحلة 6/6\nإنشاء Commit..."
+    );
+
+    const commit = await github(
+      `/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}/git/commits`,
+      {
+        method:"POST",
+        body:JSON.stringify({
+          message:getMessage(),
+          tree:tree.sha,
+          parents:[parentSha]
+        })
+      }
+    );
+
+
+    /* -----------------------------------------------------
+       Update branch
+    ----------------------------------------------------- */
+
+    progress(90);
+
+    showStatus(
+      "applyStatus",
+      "info",
+      "تحديث فرع GitHub..."
+    );
+
+    const updated =
+      await github(
+        `/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}/git/refs/heads/${encodeURIComponent(branch)}`,
+        {
+          method:"PATCH",
+          body:JSON.stringify({
+            sha:commit.sha,
+            force:false
+          })
+        }
+      );
+
+
+    progress(100);
+
+    showStatus(
+      "applyStatus",
+      "success",
+      `تم التطبيق بنجاح ✅
+
+Repository:
+${owner}/${repo}
+
+Branch:
+${branch}
+
+Commit:
+${commit.sha}
+
+عدد الملفات:
+${zipEntries.length}
+
+تم تحديث GitHub بنجاح.
+الآن GitHub Actions المفروض يبدأ البناء تلقائياً إذا كان workflow يحتوي push على main.`
+    );
+
+    await loadActions();
+
+  }catch(error){
+
+    showStatus(
+      "applyStatus",
+      "error",
+      `❌ فشل التطبيق
+
+${error.message}
+
+إذا ظهر HTTP 403:
+المشكلة صلاحيات Token.
+
+إذا ظهر HTTP 404:
+المشكلة في endpoint أو صلاحية الوصول للـ Git database.
+
+إذا ظهر HTTP 409:
+هناك تعارض مع تحديث الفرع.
+
+إذا ظهر HTTP 422:
+GitHub رفض بيانات الـ Tree أو Commit.`
+    );
+
+  }finally{
+
+    setBusy(false);
+
+  }
 }
-function escapeRegExp(s){return s.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")}
 
-async function loadRuns(){
+
+/* =========================================================
+   GitHub Actions
+========================================================= */
+
+async function loadActions(){
+
+  const box = $("actions");
+
   try{
-    const d=await gh(apiBase()+"/actions/runs?per_page=8");
-    $("runs").textContent=(d.workflow_runs||[]).map(r=>`${r.status} | ${r.conclusion||"-"} | ${r.name} | ${r.head_branch} | ${r.id}`).join("\n")||"لا توجد عمليات.";
-  }catch(e){$("runs").textContent="تعذر قراءة Actions: "+e.message}
+
+    const {owner, repo} = parseRepo();
+
+    box.innerHTML =
+      `<div class="status info">
+        جاري تحميل عمليات البناء...
+      </div>`;
+
+    const data = await github(
+      `/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}/actions/runs?per_page=8`
+    );
+
+    if(!data.workflow_runs || !data.workflow_runs.length){
+
+      box.innerHTML =
+        `<div class="status info">
+          لا توجد عمليات بناء حتى الآن.
+        </div>`;
+
+      return;
+    }
+
+    box.innerHTML = "";
+
+    data.workflow_runs.forEach(run => {
+
+      const div =
+        document.createElement("div");
+
+      div.className = "run";
+
+      const status =
+        run.conclusion ||
+        run.status ||
+        "unknown";
+
+      div.innerHTML = `
+        <b>${escapeHTML(run.name || "Workflow")}</b>
+        <br>
+        <span class="small">
+          ${escapeHTML(status)}
+          ·
+          ${escapeHTML(run.head_branch || "")}
+        </span>
+        <br>
+        <a
+          href="${run.html_url}"
+          target="_blank"
+          rel="noopener"
+        >
+          فتح العملية
+        </a>
+      `;
+
+      box.appendChild(div);
+
+    });
+
+  }catch(error){
+
+    box.innerHTML =
+      `<div class="status error">
+        فشل تحميل GitHub Actions
+
+        ${escapeHTML(error.message)}
+      </div>`;
+
+  }
+
 }
-function clearAll(){zipFile=null;zipEntries=[];$("zip").value="";$("fileList").style.display="none";$("zipStatus").className="status";$("zipStatus").textContent="لم يتم اختيار ملف.";$("applyStatus").className="status";$("applyStatus").textContent="بانتظار الاتصال وملف ZIP.";updateButton()}
+
+
+/* =========================================================
+   Escape HTML
+========================================================= */
+
+function escapeHTML(value){
+
+  return String(value ?? "")
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+
+}
+
 </script>
+
 </body>
 </html>
